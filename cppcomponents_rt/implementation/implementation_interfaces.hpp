@@ -29,6 +29,8 @@ namespace cppcomponents{
 				hstring_type CreateString(cross_compiler_interface::basic_cr_string<native_char_t,std::char_traits<native_char_t>>);
 				hstring_type DuplicateString(hstring_type);
 				std::pair<const native_char_t*,std::uint32_t> GetStringRawBuffer(hstring_type);
+				hstring_type ConcatenateStrings(hstring_type, hstring_type);
+				std::int32_t CompareStrings(hstring_type, hstring_type);
 				void DeleteString(hstring_type);
 
 				//
@@ -40,7 +42,10 @@ namespace cppcomponents{
 				// Activation Factory
 				portable_base* GetActivationFactory(hstring_type h, const uuid_base*);
 
-				CPPCOMPONENTS_CONSTRUCT(StaticInterface, CreateString, DuplicateString, GetStringRawBuffer, DeleteString, Initialize,Uninitialize,
+				void CppComponentRtInitialize(cr_string config_file);
+
+				CPPCOMPONENTS_CONSTRUCT(StaticInterface, CreateString, DuplicateString, GetStringRawBuffer,
+					ConcatenateStrings, CompareStrings, DeleteString, Initialize,Uninitialize,
 				GetActivationFactory,CppComponentRtInitialize);
 
 
@@ -88,6 +93,16 @@ namespace cppcomponents{
 					return std::make_pair(p,length );
 
 				}
+				static hstring_type ConcatenateStrings(hstring_type h1, hstring_type h2){
+					hstring_type ret = nullptr;
+					WindowsConcatString(h1, h2,&ret);
+					return ret;
+				}
+				static std::int32_t CompareStrings(hstring_type h1, hstring_type h2){
+					std::int32_t ret = 0;
+					return WindowsCompareStringOrdinal(h1, h2, &ret);
+				}
+
 				static void DeleteString(hstring_type h){
 					WindowsDeleteString(h);
 				}
@@ -128,3 +143,11 @@ namespace cppcomponents{
 
 
 #endif
+
+namespace cross_compiler_interface{
+
+	template<>
+	struct cross_conversion<cppcomponents::rt::implementation::hstring_type>
+		:trivial_conversion<cppcomponents::rt::implementation::hstring_type>
+	{};
+}

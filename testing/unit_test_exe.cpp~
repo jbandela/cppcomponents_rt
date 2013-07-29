@@ -51,20 +51,14 @@ TEST(hstring_tests, to_string){
 
 	using cppcomponents::rt::hstring;
 
-	hstring h(std::string("This is a test"));
-
-	std::string expected("This is a test");
-
-	EXPECT_EQ(h.to_string(), expected);
-
+	hstring h(std::string("aäáéöő"));
+	auto s = h.to_string();
+	EXPECT_EQ(s, "aäáéöő");
 }
-TEST(hstring_tests, to_wstring){
+TEST(hstring_tests, to_string1){
 
 	using cppcomponents::rt::hstring;
 
-	hstring h(std::wstring(L"This is a test"));
-	std::wstring expected(L"This is a test");
-
-	EXPECT_EQ(h.to_wstring(), expected);
+	hstring h(std::string("This is a test"));
 
 }

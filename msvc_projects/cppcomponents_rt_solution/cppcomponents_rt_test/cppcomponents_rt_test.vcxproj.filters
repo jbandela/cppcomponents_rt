@@ -18,6 +18,9 @@
     <ClInclude Include="..\..\..\cppcomponents_rt\implementation\implementation_interfaces.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\cppcomponents_rt\hstring.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\testing\unit_test_exe.cpp">
