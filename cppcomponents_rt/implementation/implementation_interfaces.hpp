@@ -16,6 +16,7 @@ namespace cppcomponents{
 			// hstring_type is compatible with HSTRING
 			typedef HSTRING__* hstring_type;
 			typedef wchar_t native_char_t;
+			typedef char non_native_char_t;
 #else
 			namespace detail{
 				struct hstring_base_type;
@@ -23,6 +24,7 @@ namespace cppcomponents{
 			typedef hstring_base_type* hstring_type;
 
 			typedef char native_char_t;
+			typedef wchar_t non_native_char_t;
 #endif
 
 			struct StaticInterface : public define_interface < uuid < 0x210054e8, 0xea2a, 0x4d70, 0x88b0, 0x6f4e4677a68d>>{
@@ -64,7 +66,7 @@ namespace cppcomponents{
 
 
 }
-#define CPPCOMPONENTS_RT_USE_RAW_WINRT_CALLS
+//#define CPPCOMPONENTS_RT_USE_RAW_WINRT_CALLS
 #ifdef CPPCOMPONENTS_RT_USE_RAW_WINRT_CALLS
 #include <winstring.h>
 #include <roapi.h>

@@ -78,8 +78,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\cppcomponents_rt\cppcomponents_rt.hpp" />
     <ClInclude Include="..\..\..\cppcomponents_rt\hstring.hpp" />
     <ClInclude Include="..\..\..\cppcomponents_rt\implementation\implementation_interfaces.hpp" />
+    <ClInclude Include="..\..\..\testing\unit_test_client_interfaces.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\testing\test\external\googletest-read-only\src\gtest-all.cc" />

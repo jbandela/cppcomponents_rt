@@ -134,6 +134,9 @@ namespace cppcomponents{
 			basic_cr_string < value_type, std::char_traits<value_type>> cr(s);
             _value = implementation::Implementation::CreateString(cr);
         }
+		hstring(const implementation::non_native_char_t* s) : hstring(std::basic_string<implementation::non_native_char_t>(s)){
+
+		}
 
 		template <class T>
 		explicit hstring(cppcomponents::basic_cr_string<implementation::native_char_t,T> crs)
@@ -173,26 +176,26 @@ namespace cppcomponents{
             return *this;
         }
 
-        auto operator=(hstring&& other) -> hstring&
-        {
-            implementation::Implementation::DeleteString(_value);
-            _value = other._value;
-            other._value = nullptr;
-            return *this;
-        }
+        //auto operator=(hstring&& other) -> hstring&
+        //{
+        //    implementation::Implementation::DeleteString(_value);
+        //    _value = other._value;
+        //    other._value = nullptr;
+        //    return *this;
+        //}
 
-        auto operator=(implementation::hstring_type&& h) -> hstring&
-        {
-            _value = h;
-            h = nullptr;
-            return *this;
-        }
+   //     auto operator=(implementation::hstring_type&& h) -> hstring&
+   //     {
+   //         _value = h;
+   //         h = nullptr;
+   //         return *this;
+   //     }
 
-        auto operator=(const std::wstring& w) -> hstring&
-        {
-			_value = implementation::Implementation::CreateString(detail::native_to_string<implementation::native_char_t>::to_native_string(w)); 
-            return *this;
-        }
+   //     auto operator=(const std::wstring& w) -> hstring&
+   //     {
+			//_value = implementation::Implementation::CreateString(detail::native_to_string<implementation::native_char_t>::to_native_string(w)); 
+   //         return *this;
+   //     }
 
         ~hstring()
         {
@@ -340,17 +343,37 @@ namespace cppcomponents{
 
 
 
-// allow hstring to be used in interface definitions
-namespace cross_compiler_interface{
+	// allow hstring to be used in interface definitions
+	namespace cross_compiler_interface{
+		template<>
+		struct cross_conversion<cppcomponents::rt::hstring>{
+			typedef cppcomponents::rt::hstring original_type;
+			typedef cppcomponents::rt::implementation::hstring_type converted_type;
+			static converted_type to_converted_type(const original_type& h){
+				return h.value();
+			}
+			static  original_type to_original_type(cppcomponents::rt::implementation::hstring_type c){
+				return cppcomponents::rt::hstring(c);
+			}
+
+		};
+
 	template<>
-	struct cross_conversion<cppcomponents::rt::hstring>{
-		typedef cppcomponents::rt::hstring original_type;
+	struct cross_conversion_return<cppcomponents::rt::hstring>{
+		typedef cross_conversion<cppcomponents::rt::hstring> cc;
+		typedef cppcomponents::rt::hstring return_type;
 		typedef cppcomponents::rt::implementation::hstring_type converted_type;
-		static converted_type to_converted_type(const original_type& h){
-			return h.value();
+
+		static void initialize_return(return_type& r, converted_type& c){
+
 		}
-		static  original_type to_original_type(cppcomponents::rt::implementation::hstring_type c){
-			return cppcomponents::rt::hstring(c);
+
+		static void do_return(cppcomponents::rt::hstring && r, converted_type& h){
+			h = r.release();
+		}
+		static void finalize_return(return_type& r, converted_type& c){
+
+			r = std::move(c);
 		}
 
 	};

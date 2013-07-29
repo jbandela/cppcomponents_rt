@@ -21,6 +21,12 @@
     <ClInclude Include="..\..\..\cppcomponents_rt\hstring.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\cppcomponents_rt\cppcomponents_rt.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\testing\unit_test_client_interfaces.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\testing\unit_test_exe.cpp">

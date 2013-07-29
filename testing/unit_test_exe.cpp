@@ -1,5 +1,6 @@
-#include "..\cppcomponents_rt\hstring.hpp"
-#pragma execution_character_set("utf-8")
+#include "../cppcomponents_rt/hstring.hpp"
+#include "../cppcomponents_rt/cppcomponents_rt.hpp"
+#include "unit_test_client_interfaces.hpp"
 
 #include <gtest/gtest.h>
 
@@ -66,5 +67,22 @@ TEST(hstring_tests, to_wstring){
 	std::wstring expected(L"This is a test");
 
 	EXPECT_EQ(h.to_wstring(), expected);
+
+}
+
+TEST(winrt_client_tests, test_client){
+
+		cppcomponents::rt::initializer init;
+
+		cppcomponents::rt::hstring uri_string("http://www.microsoft.com");
+		CUri uri(uri_string);
+		auto w = uri.GetDomain();
+		std::wcout << L"Domain name: " << uri.GetDomain().c_str() << std::endl;
+
+		std::wcout << L"Absolute Canonical Uri: " << uri.AbsoluteCanonicalUri().c_str() << std::endl;
+		auto escaped = CUri::EscapeComponent(L"this is a test");
+		std::wcout << escaped.c_str() << std::endl;
+		auto unescaped = CUri::UnescapeComponent(escaped);
+		std::wcout << unescaped.c_str() << std::endl;
 
 }
