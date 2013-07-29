@@ -45,10 +45,12 @@ namespace cppcomponents{
 				portable_base* GetActivationFactory(hstring_type h, const uuid_base*);
 
 				void CppComponentRtInitialize(cr_string config_file);
+				void* AllocateMemory(std::size_t sz);
+				void FreeMemory(void* p);
 
 				CPPCOMPONENTS_CONSTRUCT(StaticInterface, CreateString, DuplicateString, GetStringRawBuffer,
 					ConcatenateStrings, CompareStrings, DeleteString, Initialize, Uninitialize,
-					GetActivationFactory, CppComponentRtInitialize);
+					GetActivationFactory, CppComponentRtInitialize,AllocateMemory,FreeMemory);
 
 
 			};

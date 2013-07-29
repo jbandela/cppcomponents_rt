@@ -89,13 +89,12 @@ TEST(winrt_client_tests, test_client){
 
 		cppcomponents::rt::hstring uri_string("http://www.microsoft.com");
 		CUri uri(uri_string);
-		auto w = uri.GetDomain();
-		std::wcout << L"Domain name: " << uri.GetDomain().c_str() << std::endl;
 
-		std::wcout << L"Absolute Canonical Uri: " << uri.AbsoluteCanonicalUri().c_str() << std::endl;
+		EXPECT_EQ(uri.GetDomain(), cppcomponents::rt::hstring("www.microsoft.com"));
+		EXPECT_EQ(uri.AbsoluteCanonicalUri(), cppcomponents::rt::hstring("http://www.microsoft.com"));
+
+
 		auto escaped = CUri::EscapeComponent(L"this is a test");
-		std::wcout << escaped.c_str() << std::endl;
-		auto unescaped = CUri::UnescapeComponent(escaped);
-		std::wcout << unescaped.c_str() << std::endl;
+		EXPECT_EQ(CUri::UnescapeComponent(escaped),"this is a test");
 
 }

@@ -65,7 +65,14 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 	static void CppComponentRtInitialize(cppcomponents::cr_string config_file){
 
 	}
+	static void* AllocateMemory(std::size_t sz){
+		return ::CoTaskMemAlloc(sz);
+	}
+	static void FreeMemory(void* p){
+		::CoTaskMemFree(p);
+	}
 
 };
 
 CPPCOMPONENTS_DEFINE_FACTORY(Win8Implementation);
+

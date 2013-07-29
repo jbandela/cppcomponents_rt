@@ -46,7 +46,7 @@ namespace cppcomponents{
 					std::uint32_t count = 0;
 					cross_compiler_interface::uuid_base* piids = 0;
 					auto ret = this->get_vtable_fn()(this->get_portable_base(), &count, &piids);
-					std::unique_ptr<decltype(piids)> uptr(piids, ::CoTaskMemFree);
+					std::unique_ptr<decltype(piids)> uptr(piids, rt::implementation::Implementation::FreeMemory);
 					if (ret < 0){
 						this->exception_from_error_code(ret);
 					}
@@ -66,7 +66,7 @@ namespace cppcomponents{
 							*pcount = 0;
 							*iids = nullptr;
 						}
-						auto piids = static_cast<cross_compiler_interface::uuid_base*>(::CoTaskMemAlloc(v.size()*sizeof(v[0])));
+						auto piids = static_cast<cross_compiler_interface::uuid_base*>(rt::implementation::Implementation::AllocateMemory(v.size()*sizeof(v[0])));
 						if (!piids){
 							*pcount = 0;
 							return cross_compiler_interface::error_out_of_memory::ec;
@@ -303,7 +303,7 @@ namespace cppcomponents{
 				};
 
 				typedef implement_factory_static_interfaces ImplementFactoryStaticInterfaces;
-				static TrustLevel GetTrustLevel(){ return BaseTrust; }
+				static TrustLevel GetTrustLevel(){ return 0; }
 
 
 				static cppcomponents::use<cppcomponents::InterfaceUnknown> InterfaceActivationFactory_ActivateInstance(){
@@ -329,9 +329,9 @@ namespace cppcomponents{
 		namespace detail{
 			struct activation_factory_holder{
 
-
-				activation_factory_holder(hstring hs) : af_(get_activation_factory(hs)){};
-				cppcomponents::use<InterfaceUnknown> get(){ return af_.QueryInterface<cppcomponents::InterfaceUnknown>(); };
+				hstring hs_;
+				activation_factory_holder(const hstring& hs) : hs_(hs){};
+				cppcomponents::use<InterfaceUnknown> get(){ return get_activation_factory(hs_).QueryInterface<cppcomponents::InterfaceUnknown>(); };
 
 				static cppcomponents::use<cppcomponents::InterfaceUnknown> create(hstring hs){
 					return get_activation_factory(hs).QueryInterface<cppcomponents::InterfaceUnknown>();
@@ -362,7 +362,7 @@ namespace cppcomponents{
 			template<class P0, class... P>
 			explicit use_rt_runtime_class(P0 && p0, P && ... p) : base_t{ std::forward<P0>(p0), std::forward<P>(p)... }{}
 
-			use_rt_runtime_class() : base_t{ base_t::from_interface(base_t::factory_interface().QueryInterface<InterfaceActivationFactory>().ActivateInstance()) }{}
+			use_rt_runtime_class() : base_t{ base_t::from_interface(base_t::factory_interface().template QueryInterface<InterfaceActivationFactory>().ActivateInstance()) }{}
 
 
 
