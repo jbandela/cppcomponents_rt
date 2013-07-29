@@ -47,8 +47,8 @@ namespace cppcomponents{
 				void CppComponentRtInitialize(cr_string config_file);
 
 				CPPCOMPONENTS_CONSTRUCT(StaticInterface, CreateString, DuplicateString, GetStringRawBuffer,
-					ConcatenateStrings, CompareStrings, DeleteString, Initialize,Uninitialize,
-				GetActivationFactory,CppComponentRtInitialize);
+					ConcatenateStrings, CompareStrings, DeleteString, Initialize, Uninitialize,
+					GetActivationFactory, CppComponentRtInitialize);
 
 
 			};

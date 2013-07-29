@@ -15,6 +15,15 @@
 
 #define NATIVE L
 
+
+struct InitOnce{
+	InitOnce(){
+		cppcomponents::runtime_classes_map().add("cppcomponents_rt_implementation", "win8_rt_implementation");
+		cppcomponents::runtime_classes_map().finalize();
+	}
+} init_;
+
+
 TEST(hstring_tests, default_construct){
 	cppcomponents::rt::hstring h;
 
@@ -70,7 +79,11 @@ TEST(hstring_tests, to_wstring){
 
 }
 
+
+
 TEST(winrt_client_tests, test_client){
+
+
 
 		cppcomponents::rt::initializer init;
 
