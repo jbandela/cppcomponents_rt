@@ -1,3 +1,6 @@
+#pragma once
+#ifndef INCLUDE_GUARD_CPPCOMPONENT_RT_IMPLEMENTATION_INTERFACES_HPP
+#define INCLUDE_GUARD_CPPCOMPONENT_RT_IMPLEMENTATION_INTERFACES_HPP
 #include <cppcomponents/cppcomponents.hpp>
 
 
@@ -155,3 +158,6 @@ namespace cross_compiler_interface{
 		:trivial_conversion<cppcomponents::rt::implementation::hstring_type>
 	{};
 }
+
+
+#endif
