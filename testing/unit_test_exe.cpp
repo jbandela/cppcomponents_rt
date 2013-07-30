@@ -100,25 +100,15 @@ TEST(winrt_client_tests, test_client){
 		EXPECT_EQ(CUri::UnescapeComponent(escaped),"this is a test");
 
 }
-#include <Windows.h>
-int PrintError(unsigned int line, HRESULT hr)
-{
-	wprintf_s(L"ERROR: Line:%d HRESULT: 0x%X\n", line, hr);
-	return hr;
-}
+
 
 TEST(winrt_client_tests, test_events){
 
 
 
 	rt::initializer init;
-		auto enumerationCompleted = CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, WRITE_OWNER | EVENT_ALL_ACCESS);
-		auto hr = enumerationCompleted ? S_OK : HRESULT_FROM_WIN32(GetLastError());
-		if (FAILED(hr))
-		{
-			 PrintError(__LINE__, hr);
-		}
-
+	std::atomic<bool> done = { false };
+	bool enumCompleted = false;
 
 		int deviceCount = 0;
 		auto watcher = DeviceInformation::CreateWatcher();
@@ -131,7 +121,6 @@ TEST(winrt_client_tests, test_events){
 		addedToken = watcher.Added += [&deviceCount](use<InterfaceDeviceWatcher> watcher, void*){
 			// Print a message and increment the device count. 
 			// When we reach 10 devices, stop enumerating devices.
-			wprintf_s(L"Added device...\n");
 			deviceCount++;
 			if (deviceCount == 10)
 			{
@@ -139,8 +128,7 @@ TEST(winrt_client_tests, test_events){
 			}
 		};
 
-		stoppedToken = watcher.Stopped += [&,watcher](use<InterfaceDeviceWatcher> w, use<InterfaceInspectable>)mutable{
-			wprintf_s(L"Device enumeration stopped.\nRemoving event handlers...\n");
+		stoppedToken = watcher.Stopped += [&](use<InterfaceDeviceWatcher> w, use<InterfaceInspectable>)mutable{
 
 			// Unsubscribe from the events. This is shown for demonstration. 
 			// The need to remove event handlers depends on the requirements of  
@@ -152,30 +140,30 @@ TEST(winrt_client_tests, test_events){
 			w.Stopped -= stoppedToken;
 			w.EnumerationCompleted -= enumCompletedToken;
 
-			watcher = nullptr;
-
+			// It seems there is a "bug in IDeviceWatcher in that Release calls stop which causes an error
+			// When the device is not started. This is also visible in the WRL example.
+			// So add a dummy handler and call start on it;
 			w.Added += [](use<InterfaceDeviceWatcher> watcher, void*){};
 			w.Start();
-			w = nullptr;
 
 			// Set the completion event and return.
-			SetEvent(enumerationCompleted);
+			done = true;
 
 
 		};
-		enumCompletedToken = watcher.EnumerationCompleted += [](use<InterfaceDeviceWatcher> watcher, use<InterfaceInspectable>){
-			wprintf_s(L"Enumeration completed.\n");
-
-			return watcher.Stop();
+		enumCompletedToken = watcher.EnumerationCompleted += [&](use<InterfaceDeviceWatcher> w, use<InterfaceInspectable>){
+			enumCompleted = true;
+			watcher.Stop();
 
 		};
 
 
 		watcher.Start();
-		watcher = nullptr;
 
-		WaitForSingleObjectEx(enumerationCompleted, INFINITE, FALSE);
-		wprintf_s(L"Enumerated %u devices.\n", deviceCount);
+		// Busy wait
+		while (done == false);
+
+		EXPECT_EQ(enumCompleted ? 10 : deviceCount, 10);
 
 
 

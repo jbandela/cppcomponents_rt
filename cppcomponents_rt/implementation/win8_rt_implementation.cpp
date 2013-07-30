@@ -11,10 +11,7 @@ using namespace implementation;
 #include <unordered_map>
 #include <atomic>
 
-#define CPPCOMPONENTS_RT_NO_CACHE
 
-
-#ifndef CPPCOMPONENTS_RT_NO_CACHE
 typedef std::pair<std::uint32_t,std::unordered_map<std::basic_string<implementation::native_char_t>, use<InterfaceUnknown>>> map_t;
 
 struct factory_map{
@@ -60,7 +57,6 @@ struct factory_map{
 
 };
 	 std::uint32_t factory_map::global_TLS_handle = TLS_OUT_OF_INDEXES;
-#endif
 
 struct Win8Implementation : implement_runtime_class<Win8Implementation, implementation::Implementation_t>{
 	static hstring_type CreateString(cross_compiler_interface::basic_cr_string < native_char_t, std::char_traits < native_char_t >> s){
@@ -100,7 +96,6 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 	// Call per thread
 	static void Initialize(std::int32_t i){
 
-#ifndef CPPCOMPONENTS_RT_NO_CACHE
 
 		auto p = factory_map::get().get_map();
 		if (p){
@@ -113,13 +108,11 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 			ptr.release();
 
 		}
-#endif
 		auto e = RoInitialize(static_cast <RO_INIT_TYPE>(i));
 		throw_if_error(e);
 	}
 
 	static void Uninitialize(){
-#ifndef CPPCOMPONENTS_RT_NO_CACHE
 		try{
 			if (auto pm = factory_map::get().get_map()){
 				if (--pm->first)
@@ -131,13 +124,11 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 		}
 
 		RoUninitialize();
-#endif
 
 	}
 
 	// Activation Factory
 	static portable_base* GetActivationFactory(hstring_type h, const uuid_base* u){
-#ifndef CPPCOMPONENTS_RT_NO_CACHE
 		auto& m = factory_map::get().get_map()->second;
 		std::uint32_t length;
 		auto p = ::WindowsGetStringRawBuffer(h, &length);
@@ -153,13 +144,6 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 		else{
 			return iter->second.QueryInterfaceRaw(u);
 		}
-#else
-			portable_base* p = nullptr;
-			auto e = RoGetActivationFactory(h, reinterpret_cast <const IID&>(*u), reinterpret_cast<void**>(&p));
-			throw_if_error(e);
-			return p;
-
-#endif
 	}
 
 
