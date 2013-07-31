@@ -157,7 +157,8 @@ struct Win8Implementation : implement_runtime_class<Win8Implementation, implemen
 		::CoTaskMemFree(p);
 	}
 
+	Win8Implementation(){}
 };
 
-CPPCOMPONENTS_DEFINE_FACTORY(Win8Implementation);
+CPPCOMPONENTS_DEFINE_FACTORY();
 

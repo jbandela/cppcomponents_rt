@@ -6,8 +6,8 @@ struct InterfaceUriRuntimeClass : public cppcomponents::rt::define_rt_interface 
 	// Define a typedef for hstring
 	typedef cppcomponents::rt::hstring hstring;
 
-	// Declare Interface so we can use it in our class
-	template<class T> struct Interface;
+	//// Declare Interface so we can use it in our class
+	//template<class T> struct Interface;
 
 	// Define the UUID for the class
 
