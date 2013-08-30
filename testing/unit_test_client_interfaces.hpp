@@ -126,10 +126,10 @@ using namespace rt;
 struct InterfaceDeviceWatcher : public define_rt_interface <cppcomponents::uuid<0xC9EAB97D, 0x8F6B, 0x4F96, 0xA9F4, 0xABC814E22271>>{
 
 	// Our delegates
-	typedef cppcomponents::event_delegate < void(use<InterfaceDeviceWatcher>, void*), cppcomponents::uuid<0x03c5a07b, 0x990c, 0x5d09, 0xb0b8, 0x5734eaa38222>> AddHandler;
-	typedef cppcomponents::event_delegate < void(use<InterfaceDeviceWatcher>, void*), cppcomponents::uuid<0x906f1254, 0x79ad, 0x54fc, 0x93c4, 0xcdb99b437899>> UpdateHandler;
-	typedef cppcomponents::event_delegate < void(use<InterfaceDeviceWatcher>, use<InterfaceInspectable>), cppcomponents::uuid<0x9234630f, 0x1ff4, 0x54f6, 0x9e3f, 0xac20369b7725>> CompletedHandler;
-	typedef cppcomponents::event_delegate < void(use<InterfaceDeviceWatcher>, use<InterfaceInspectable>), cppcomponents::uuid<0x9234630f, 0x1ff4, 0x54f6, 0x9e3f, 0xac20369b7725>> StoppedHandler;
+	typedef cppcomponents::delegate < void(use<InterfaceDeviceWatcher>, void*), cppcomponents::uuid<0x03c5a07b, 0x990c, 0x5d09, 0xb0b8, 0x5734eaa38222>> AddHandler;
+	typedef cppcomponents::delegate < void(use<InterfaceDeviceWatcher>, void*), cppcomponents::uuid<0x906f1254, 0x79ad, 0x54fc, 0x93c4, 0xcdb99b437899>> UpdateHandler;
+	typedef cppcomponents::delegate < void(use<InterfaceDeviceWatcher>, use<InterfaceInspectable>), cppcomponents::uuid<0x9234630f, 0x1ff4, 0x54f6, 0x9e3f, 0xac20369b7725>> CompletedHandler;
+	typedef cppcomponents::delegate < void(use<InterfaceDeviceWatcher>, use<InterfaceInspectable>), cppcomponents::uuid<0x9234630f, 0x1ff4, 0x54f6, 0x9e3f, 0xac20369b7725>> StoppedHandler;
 
 
 	std::int64_t add_Added(use<AddHandler>);
@@ -159,7 +159,7 @@ struct InterfaceDeviceWatcher : public define_rt_interface <cppcomponents::uuid<
 		add_Stopped, remove_Stopped, get_Status, Start, Stop);
 
 	// Define the properties and events
-	CPPCOMPONENTS_INTERFACE_EXTRAS{
+	CPPCOMPONENTS_INTERFACE_EXTRAS(InterfaceDeviceWatcher){
 
 		CPPCOMPONENTS_R_PROPERTY(get_Status) Status;
 

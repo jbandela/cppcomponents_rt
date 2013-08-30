@@ -6,3 +6,8 @@ g++ -std=c++11 ../unit_test_exe.cpp -I ..\..\..\cppcomponents -I external\google
 cl ..\..\cppcomponents_rt\implementation\win8_rt_implementation.cpp /LD /I ..\..\..\cppcomponents /EHsc runtimeobject.lib ole32.lib
 
 a.exe
+
+del *.exe
+del *.dll
+del *.lib
+del *.obj
